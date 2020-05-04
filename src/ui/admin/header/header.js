@@ -23,11 +23,10 @@ export function Header({ title }) {
       <header className={styles.header}>
         <nav>
           <Link href="/admin">
-            <a>
-              <span role="img" aria-label="home">
-                🏠
-              </span>
-            </a>
+            <a>Admin</a>
+          </Link>
+          <Link href="/">
+            <a>Home</a>
           </Link>
         </nav>
 
@@ -37,6 +36,12 @@ export function Header({ title }) {
           </nav>
         )}
       </header>
+
+      <style jsx>{`
+        nav a {
+          margin-right: 24px;
+        }
+      `}</style>
     </React.Fragment>
   )
 }

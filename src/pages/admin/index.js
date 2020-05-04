@@ -30,20 +30,17 @@ export default function Admin() {
 }
 
 function CreateNewCategory() {
-  const [value, seValue] = React.useState("")
+  const router = useRouter()
+
   async function handleCreateCategory(event) {
     event.preventDefault()
-    const response = await firebase.firestore().collection("categories").add({ name: value })
-    console.log(response)
-  }
-
-  function handleInputChange(event) {
-    seValue(event.target.value)
+    let name = prompt("new category name", "random")
+    const response = await firebase.firestore().collection("categories").add({ name })
+    router.push(`/admin/category/${response.id}`)
   }
 
   return (
     <form onSubmit={handleCreateCategory}>
-      <input type="text" value={value} onChange={handleInputChange} placeholder="category name"></input>
       <button>create new category</button>
     </form>
   )

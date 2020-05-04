@@ -1,30 +1,27 @@
-import { firebase } from "src/services/firebase"
-import { Container } from "src/ui/container"
-import { Gallery } from "src/ui/gallery"
+import Link from "next/link"
 
-export default function Home({ wallpapersData }) {
-  const isWallpapersAvailable = wallpapersData.length > 0
-
+export default function Home() {
   return (
-    <Container fluid>
-      <Gallery>
-        {isWallpapersAvailable && wallpapersData.map((item) => <Walpapper key={item.id} {...item}></Walpapper>)}
-      </Gallery>
-    </Container>
+    <React.Fragment>
+      <main>
+        <h1>Vigbo gallery</h1>
+        <Link href="/admin">
+          <a>Admin</a>
+        </Link>
+      </main>
+      <style jsx>{`
+        h1 {
+          font-size: 4vmin;
+        }
+
+        main {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          flex-direction: column;
+        }
+      `}</style>
+    </React.Fragment>
   )
-}
-
-function Walpapper({ url }) {
-  return <img src={url} alt="" loading="lazy"></img>
-}
-
-export async function getStaticProps() {
-  const response = await firebase.firestore().collection("wallpapers").get()
-  const wallpapersData = response.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-
-  return {
-    props: {
-      wallpapersData,
-    },
-  }
 }

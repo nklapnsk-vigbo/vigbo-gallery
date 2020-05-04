@@ -1,10 +1,11 @@
 import { useDropzone } from "react-dropzone"
 import { nanoid } from "nanoid"
+import clsx from "clsx"
 
 import { firebase } from "src/services/firebase"
 import { Container } from "src/ui/container"
 import { Header } from "src/ui/admin/header"
-import { Category as CategoryWrapper } from "src/ui/admin/category"
+import { Gallery } from "src/ui/gallery"
 
 export default function Category({ slug }) {
   const [categoryData, setCategoryData] = React.useState([])
@@ -22,9 +23,7 @@ export default function Category({ slug }) {
       })
   }, [])
 
-  const [files, setFiles] = React.useState([])
   const onDrop = React.useCallback((acceptedFiles) => {
-    setFiles(acceptedFiles)
     const storageRef = firebase.storage().ref()
     acceptedFiles.forEach((file) => {
       // Добавляем к имени файла рандомный хэш, потому что если в сторадже уже есть файл с таким же именем - происходят непонятки
@@ -40,8 +39,6 @@ export default function Category({ slug }) {
           uploadTask.snapshot.ref
             .getDownloadURL()
             .then((url) => firebase.firestore().collection("categories").doc(slug).collection("photos").add({ url }))
-
-          setFiles([])
         }
       )
     })
@@ -55,23 +52,32 @@ export default function Category({ slug }) {
     <Container>
       <Header title={slug}></Header>
       <section>
-        <h1>Upload file</h1>
-        <div {...getRootProps()}>
+        <div {...getRootProps()} className="dropzone">
           <input {...getInputProps()} />
           {isDragActive ? (
-            <p>Drop the files here ...</p>
+            <p className="dropzone-title">Drop the files here ...</p>
           ) : (
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <p className="dropzone-title">Drag 'n' drop some files here, or click to select files</p>
           )}
         </div>
-        <span>Files to upload: {files.length}</span>
       </section>
 
-      <CategoryWrapper>
-        {isCategoriesAvailable && categoryData.map((item) => <img key={item.id} src={item.url} alt=""></img>)}
-      </CategoryWrapper>
+      <Gallery>
+        {isCategoriesAvailable &&
+          categoryData.map((item) => <CategoryImage key={item.id} url={item.url}></CategoryImage>)}
+      </Gallery>
     </Container>
   )
+}
+
+function CategoryImage({ url }) {
+  const [isVisible, setIsVisible] = React.useState(false)
+
+  function handleImageLoad() {
+    setIsVisible(true)
+  }
+
+  return <img src={url} className={clsx("photo", { visible: isVisible })} onLoad={handleImageLoad}></img>
 }
 
 export async function getServerSideProps(context) {
