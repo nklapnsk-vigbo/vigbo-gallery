@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "build-ssg": "next build && next export",
-    "ssg-preview": "rm -rf .next out && yarn build-ssg && serve out",
+    "clear": "rm -rf .next out",
+    "build": "yarn clear && next build",
+    "build-ssg": "yarn clear && next build && next export",
     "start": "next start"
   },
   "dependencies": {

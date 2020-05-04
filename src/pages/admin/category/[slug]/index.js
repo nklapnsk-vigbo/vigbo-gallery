@@ -1,4 +1,3 @@
-import { useRouter } from "next/router"
 import { useDropzone } from "react-dropzone"
 import { nanoid } from "nanoid"
 
@@ -7,12 +6,8 @@ import { Container } from "src/ui/container"
 import { Header } from "src/ui/admin/header"
 import { Category as CategoryWrapper } from "src/ui/admin/category"
 
-export default function Category() {
-  const router = useRouter()
-  const { slug } = router.query
+export default function Category({ slug }) {
   const [categoryData, setCategoryData] = React.useState([])
-
-  console.log("slug", slug)
 
   React.useEffect(() => {
     return firebase
@@ -77,4 +72,12 @@ export default function Category() {
       </CategoryWrapper>
     </Container>
   )
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      slug: context.params.slug,
+    },
+  }
 }
