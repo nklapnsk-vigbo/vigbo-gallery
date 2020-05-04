@@ -1,0 +1,18 @@
+.categories {
+  padding-top: 16px;
+  padding-bottom: 16px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 16px;
+  grid-row-gap: 16px;
+
+  img {
+    height: calc(50vh - 60px);
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+
+    background-color: HSLA(153, 77%, 59%, 1);
+  }
+}
