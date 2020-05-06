@@ -3,6 +3,7 @@ import { firebase } from "src/services/firebase"
 
 import styles from "./categories.module.scss"
 import clsx from "clsx"
+import { nanoid } from "nanoid"
 
 export function Categories() {
   const [categories, setCategories] = React.useState([])
@@ -58,6 +59,18 @@ function Category({ id, name }) {
     setTimeout(() => setIsTextCopied(false), 2000)
   }
 
+  const [password, setPassword] = React.useState()
+  async function handleAccessByPassword(event) {
+    if (event.target.checked) {
+      const access = nanoid()
+      const response = await firebase.firestore().collection("categories").doc(id).update({ access })
+      setPassword(access)
+    } else {
+      await firebase.firestore().collection("categories").doc(id).update({ access: null })
+      setPassword(false)
+    }
+  }
+
   return (
     <React.Fragment>
       <figure>
@@ -68,9 +81,15 @@ function Category({ id, name }) {
           </a>
         </Link>
         <footer>
-          <button onClick={handleDelete}>delete category</button>
-          <button onClick={handleShareClick}>get sharing url</button>
+          <button onClick={handleDelete}>Удалить</button>
+          <button onClick={handleShareClick}>Поделиться</button>
         </footer>
+
+        <label>
+          <span>Доступ по паролю: </span>
+          <input type="checkbox" onChange={handleAccessByPassword}></input>
+        </label>
+        <h1>{password && password}</h1>
       </figure>
       <dialog open={isTextCopied}>
         <h1>ССЫЛКА СОХРАНЕНА В БУФЕР ОБМЕНА</h1>
@@ -82,6 +101,10 @@ function Category({ id, name }) {
           justify-content: space-between;
           align-items: center;
           margin-top: 24px;
+        }
+
+        button {
+          margin-bottom: 24px;
         }
       `}</style>
     </React.Fragment>

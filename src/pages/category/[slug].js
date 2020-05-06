@@ -5,7 +5,7 @@ import { Container } from "src/ui/container"
 import { Gallery } from "src/ui/gallery"
 
 export default function Category({ slug }) {
-  const [categoryData, setCategoryData] = React.useState([])
+  const [photos, setPhotos] = React.useState([])
 
   React.useEffect(() => {
     return firebase
@@ -14,19 +14,39 @@ export default function Category({ slug }) {
       .doc(slug)
       .collection("photos")
       .onSnapshot(function (snapshot) {
-        let snapshotCategories = []
-        snapshot.forEach((doc) => snapshotCategories.push({ ...doc.data(), id: doc.id }))
-        setCategoryData(snapshotCategories)
+        let snapshotPhotos = []
+        snapshot.forEach((doc) => snapshotPhotos.push({ ...doc.data(), id: doc.id }))
+        setPhotos(snapshotPhotos)
       })
   }, [])
 
-  const isCategoriesAvailable = categoryData.length > 0
+  const [password, setPassword] = React.useState()
+  React.useEffect(() => {
+    return firebase
+      .firestore()
+      .collection("categories")
+      .doc(slug)
+      .onSnapshot(function (doc) {
+        if (doc.data().access) {
+          setPassword(true)
+          let enteredPassword = prompt("Введите пароль", "")
+          if (enteredPassword === doc.data().access) {
+            setPassword(false)
+          }
+        }
+      })
+  }, [])
+
+  const isPhotosAvailable = photos.length > 0
+
+  if (password) {
+    return null
+  }
 
   return (
     <Container>
       <Gallery>
-        {isCategoriesAvailable &&
-          categoryData.map((item) => <CategoryImage key={item.id} url={item.url}></CategoryImage>)}
+        {isPhotosAvailable && photos.map((item) => <CategoryImage key={item.id} url={item.url}></CategoryImage>)}
       </Gallery>
     </Container>
   )
