@@ -4,7 +4,7 @@ import { firebase } from "src/services/firebase"
 import { Container } from "src/ui/container"
 import { Gallery } from "src/ui/gallery"
 
-export default function Category({ slug }) {
+export default function Category({ slug, access }) {
   const [photos, setPhotos] = React.useState([])
 
   React.useEffect(() => {
@@ -22,20 +22,14 @@ export default function Category({ slug }) {
 
   const [password, setPassword] = React.useState()
   React.useEffect(() => {
-    return firebase
-      .firestore()
-      .collection("categories")
-      .doc(slug)
-      .onSnapshot(function (doc) {
-        if (doc.data().access) {
-          setPassword(true)
-          let enteredPassword = prompt("Введите пароль", "")
-          if (enteredPassword === doc.data().access) {
-            setPassword(false)
-          }
-        }
-      })
-  }, [])
+    if (access) {
+      setPassword(true)
+      let enteredPassword = prompt("Введите пароль", "")
+      if (enteredPassword === access) {
+        setPassword(false)
+      }
+    }
+  }, [access])
 
   const isPhotosAvailable = photos.length > 0
 
@@ -63,9 +57,14 @@ function CategoryImage({ url }) {
 }
 
 export async function getServerSideProps(context) {
+  const slug = context.params.slug
+  const response = await firebase.firestore().collection("categories").doc(slug).get()
+  const access = response.data().access
+
   return {
     props: {
-      slug: context.params.slug,
+      slug,
+      access,
     },
   }
 }
