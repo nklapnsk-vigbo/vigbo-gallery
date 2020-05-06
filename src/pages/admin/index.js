@@ -34,14 +34,14 @@ function CreateNewCategory() {
 
   async function handleCreateCategory(event) {
     event.preventDefault()
-    let name = prompt("new category name", "random")
+    let name = prompt("Введите название для коллекции", "Свадьба, 20.02.2020")
     const response = await firebase.firestore().collection("categories").add({ name })
-    router.push(`/admin/category/${response.id}`)
+    router.push("/admin/category/[slug]", `/admin/category/${response.id}`)
   }
 
   return (
     <form onSubmit={handleCreateCategory}>
-      <button>create new category</button>
+      <button>Создать новую коллекцию</button>
     </form>
   )
 }

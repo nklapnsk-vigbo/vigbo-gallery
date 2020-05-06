@@ -63,11 +63,11 @@ export default function SignUp() {
       <form onSubmit={handleSignUp}>
         <input name="email" type="email" placeholder="Email" required />
         <input name="password" type="password" placeholder="Password" required />
-        <button type="submit">sign up</button>
+        <button type="submit">Регистрация</button>
       </form>
 
       <Link href="/admin/signin">
-        <a>sign in</a>
+        <a>У меня есть аккаунт</a>
       </Link>
     </Container>
   )

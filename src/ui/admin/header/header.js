@@ -23,16 +23,16 @@ export function Header({ title }) {
       <header className={styles.header}>
         <nav>
           <Link href="/admin">
-            <a>Admin</a>
+            <a>Админка</a>
           </Link>
           <Link href="/">
-            <a>Home</a>
+            <a>Главная</a>
           </Link>
         </nav>
 
         {user && (
           <nav>
-            <button onClick={handleSignOut}>sign out</button>
+            <button onClick={handleSignOut}>Выйти из аккаунта</button>
           </nav>
         )}
       </header>

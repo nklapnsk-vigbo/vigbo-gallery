@@ -55,9 +55,9 @@ export default function Category({ slug }) {
         <div {...getRootProps()} className="dropzone">
           <input {...getInputProps()} />
           {isDragActive ? (
-            <p className="dropzone-title">Drop the files here ...</p>
+            <p className="dropzone-title">Дропнуть файлы...</p>
           ) : (
-            <p className="dropzone-title">Drag 'n' drop some files here, or click to select files</p>
+            <p className="dropzone-title">Сюда можно перетянуть файлы или можно кликнуть</p>
           )}
         </div>
       </section>

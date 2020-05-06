@@ -6,7 +6,7 @@ export default function Home() {
       <main>
         <h1>Vigbo gallery</h1>
         <Link href="/admin">
-          <a>Admin</a>
+          <a>Админка</a>
         </Link>
       </main>
       <style jsx>{`
